@@ -38,7 +38,7 @@ passport.use(strategy);
 // add passport as application-level middleware
 app.use(passport.initialize());
 
-const PORT = process.env.PORT || 4000; // Port number  to run the server
+const HTTP_PORT = process.env.PORT || 8080; // Port number  to run the server
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -204,8 +204,8 @@ app.delete(
 employeeService
   .connect()
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`API is running at ${PORT}`);
+    app.listen(HTTP_PORT, () => {
+      console.log(`API is running at ${HTTP_PORT}`);
     });
   })
   .catch((err) => {
