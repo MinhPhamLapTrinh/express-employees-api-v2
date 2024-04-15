@@ -9,7 +9,7 @@ import passport from "passport";
 import passportJWT, { Strategy } from "passport-jwt";
 
 const app = express();
-const PORT = process.env.PORT || 8080; // Port number  to run the server
+const PORT = process.env.PORT || 4000; // Port number  to run the server
 // Set up JWT
 let ExtractJWT = passportJWT.ExtractJwt;
 let JwtStrategy = passportJWT.Strategy;
@@ -205,7 +205,7 @@ employeeService
   .connect()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`API is running at http://localhost:${PORT}`);
+      console.log(`API is running at ${PORT}`);
     });
   })
   .catch((err) => {
