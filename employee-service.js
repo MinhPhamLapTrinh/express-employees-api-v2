@@ -54,30 +54,6 @@ export function connect() {
   });
 }
 
-export function registerOwner(ownerData) {
-  return new Promise(function (resolve, reject) {
-    if (ownerData.password !== ownerData.password2) {
-      reject("Passwords do not match");
-    } else {
-      bcrypt.hash(ownerData.password, saltRounds, (err, hash) => {
-        if (err) {
-          reject(err);
-        } else {
-          ownerData.password = hash;
-          let newOwner = new Owner(ownerData);
-          newOwner
-            .save()
-            .then(() => {
-              resolve(`Owner ${ownerData.username} successfully registered`);
-            })
-            .catch((err) => {
-              reject("There was an error creating the user: " + err);
-            });
-        }
-      });
-    }
-  });
-}
 export function checkOwner(ownerData) {
   return new Promise(function (resolve, reject) {
     Owner.findOne({ username: ownerData.username })

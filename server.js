@@ -49,17 +49,6 @@ app.get("/", (req, res)=>{
   res.send({message: "Hello"})
 })
 
-app.post("/register", async (req, res) => {
-  await employeeService
-    .registerOwner(req.body)
-    .then((msg) => {
-      res.json({ message: msg });
-    })
-    .catch((err) => {
-      res.status(422).json({ message: err });
-    });
-});
-
 app.post("/login", async (req, res) => {
   await employeeService
     .checkOwner(req.body)
