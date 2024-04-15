@@ -38,7 +38,7 @@ passport.use(strategy);
 // add passport as application-level middleware
 app.use(passport.initialize());
 
-const port = 4000; // Port number  to run the server
+const port = process.env.PORT || 4000; // Port number  to run the server
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
