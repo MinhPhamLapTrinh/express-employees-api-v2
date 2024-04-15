@@ -192,6 +192,11 @@ export function employeeClockOut(id) {
           new Date(timeRecord.startTime).setHours(0, 0, 0, 0) !== today
         ) {
           reject("You have to clock in first!");
+        } else if (
+          lastRecord &&
+          new Date(lastRecord.date).setHours(0, 0, 0, 0) === today
+        ) {
+          reject("You already clocked out today");
         } else {
           const endTime = new Date();
           const start = new Date(timeRecord.startTime).getTime();
