@@ -8,8 +8,6 @@ import jwt from "jsonwebtoken";
 import passport from "passport";
 import passportJWT, { Strategy } from "passport-jwt";
 
-const app = express();
-const PORT = process.env.PORT || 4000; // Port number  to run the server
 // Set up JWT
 let ExtractJWT = passportJWT.ExtractJwt;
 let JwtStrategy = passportJWT.Strategy;
@@ -39,6 +37,8 @@ passport.use(strategy);
 // add passport as application-level middleware
 app.use(passport.initialize());
 
+const app = express();
+const PORT = process.env.PORT || 4000; // Port number  to run the server
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
