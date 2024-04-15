@@ -38,7 +38,7 @@ let ownerSchema = new Schema({
 let Owner;
 let Employee;
 
-export function connect() {
+export async function connect() {
   return new Promise(function (resolve, reject) {
     let db = mongoose.createConnection(mongoDBConnectionString);
 
