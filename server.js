@@ -45,6 +45,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get("/", (req, res)=>{
+  res.send({message: "Hello"})
+})
+
 app.post("/register", async (req, res) => {
   await employeeService
     .registerOwner(req.body)
