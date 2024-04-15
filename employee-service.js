@@ -40,7 +40,7 @@ let Employee;
 
 export function connect() {
   return new Promise(function (resolve, reject) {
-    let db = mongoose.createConnection(mongoDBConnectionString, { ssl: true });
+    let db = mongoose.createConnection(mongoDBConnectionString);
 
     db.on("error", (err) => {
       reject(err);
