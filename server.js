@@ -7,6 +7,7 @@ import * as employeeService from "./employee-service.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 import passportJWT, { Strategy } from "passport-jwt";
+const app = express();
 
 // Set up JWT
 let ExtractJWT = passportJWT.ExtractJwt;
@@ -37,7 +38,6 @@ passport.use(strategy);
 // add passport as application-level middleware
 app.use(passport.initialize());
 
-const app = express();
 const PORT = process.env.PORT || 4000; // Port number  to run the server
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
