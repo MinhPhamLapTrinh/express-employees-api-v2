@@ -150,23 +150,22 @@ export function employeeClockIn(id) {
           if (lastRecordDate.getTime() === today.getTime()) {
             reject("You already clocked in today");
           }
-        } else {
-          let startTime = new Date().toLocaleString();
-          emp.timeRecord.push({
-            date: startTime,
-            startTime: startTime,
-            endTime: null,
-            totalWorkingHours: 0,
-          });
-          emp
-            .save()
-            .then(() => {
-              resolve(`${emp.employeeName} clocked in on ${startTime}`);
-            })
-            .catch((err) => {
-              reject(`Cannot clock in ` + err);
-            });
         }
+        let startTime = new Date().toLocaleString();
+        emp.timeRecord.push({
+          date: startTime,
+          startTime: startTime,
+          endTime: null,
+          totalWorkingHours: 0,
+        });
+        emp
+          .save()
+          .then(() => {
+            resolve(`${emp.employeeName} clocked in on ${startTime}`);
+          })
+          .catch((err) => {
+            reject(`Cannot clock in ` + err);
+          });
       });
   });
 }
