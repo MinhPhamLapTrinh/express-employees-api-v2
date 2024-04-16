@@ -144,8 +144,9 @@ export function employeeClockIn(id) {
             lastRecord.startTime
           ).toLocaleDateString();
           const lastRecordHours = new Date(lastRecordDate).setHours(0, 0, 0, 0);
-          if (lastRecordHours === todayHours)
+          if (lastRecordHours === todayHours) {
             reject("You already clocked in today");
+          }
         } else {
           let startTime = new Date().toLocaleString();
           let start = new Date().toLocaleString();
