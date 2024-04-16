@@ -222,7 +222,7 @@ export function employeeClockOut(id) {
           )
             .then(() => {
               resolve(
-                `Clock out: ${new Date(endTime).toLocaleTimeString()}.
+                `Clock out: ${new Date(endTime.getTime() - 4 * 60 * 60 * 1000).toLocaleTimeString()}.
                  Time: ${totalHours} hours and ${totalMinutes} minutes.`
               );
             })
