@@ -136,18 +136,33 @@ export function employeeClockIn(id) {
     Employee.findById(id)
       .exec()
       .then((emp) => {
-        const now = new Date().toISOString();
-        const today = new Date(now)
-        today.setHours(0, 0, 0, 0);
-        today.setUTCMinutes(today.getUTCMinutes()); // Convert to UTC
+        const now = new Date();
+        const today = new Date(
+          Date.UTC(
+            now.getUTCFullYear(),
+            now.getUTCMonth(),
+            now.getUTCDate(),
+            0,
+            0,
+            0
+          )
+        );
         const lastRecord = emp.timeRecord[emp.timeRecord.length - 1];
         if (lastRecord) {
           const lastRecordDate = new Date(lastRecord.startTime);
-          lastRecordDate.setHours(0, 0, 0, 0);
-          lastRecordDate.setUTCMinutes(lastRecordDate.getUTCMinutes()); // Convert to UTC
+          const utcLastRecordDate = new Date(
+            Date.UTC(
+              lastRecordDate.getUTCFullYear(),
+              lastRecordDate.getUTCMonth(),
+              lastRecordDate.getUTCDate(),
+              0,
+              0,
+              0
+            )
+          );
 
-          if (lastRecordDate.getTime() === today.getTime()) {
-            reject("You already clocked in today " + lastRecordDate);
+          if (utcLastRecordDate.getTime() === today.getTime()) {
+            reject("You already clocked in today " + utcLastRecordDate);
             return;
           }
         }
