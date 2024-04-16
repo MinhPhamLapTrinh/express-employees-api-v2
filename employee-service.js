@@ -149,6 +149,7 @@ export function employeeClockIn(id) {
           ); // Convert to UTC
           if (lastRecordDate.getTime() === today.getTime()) {
             reject("You already clocked in today");
+            return
           }
         }
         let startTime = new Date().toLocaleString();
