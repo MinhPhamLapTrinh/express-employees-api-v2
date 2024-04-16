@@ -3,7 +3,7 @@ import env from "dotenv";
 env.config();
 import bcrypt from "bcrypt";
 
-const LOCAL_GMT = 4
+const LOCAL_GMT = 4;
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
 let mongoDBConnectionString = process.env.MONGO_URI;
 
@@ -134,18 +134,13 @@ export function employeeClockIn(id) {
         const now = new Date(); // Current time in local timezone
         const today = new Date(now.getTime() - LOCAL_GMT * 60 * 60 * 1000); // Start of today in local timezone
         today.setHours(0, 0, 0, 0);
-        console.log("Now:", now);
-        console.log("Today:", today);
-
         const lastRecord = emp.timeRecord[emp.timeRecord.length - 1];
-        // console.log("Last Record:", lastRecord);
 
         if (lastRecord) {
           const lastRecordDate = new Date(lastRecord.startTime);
           const lastRecordDateLocal = new Date(
             lastRecordDate.getTime() - LOCAL_GMT * 60 * 60 * 1000
           ); // Convert to local timezone
-          console.log("Last Record Local:", lastRecordDateLocal);
 
           if (
             lastRecordDateLocal.getFullYear() === today.getFullYear() &&
@@ -187,11 +182,16 @@ export function employeeClockOut(id) {
     Employee.findById(id)
       .exec()
       .then((emp) => {
-        const today = new Date().setHours(0, 0, 0, 0);
+        const now = new Date(); // Current time in local timezone
+        const today = new Date(now.getTime() - LOCAL_GMT * 60 * 60 * 1000); // Start of today in local timezone
+        today.setHours(0, 0, 0, 0);
         const timeRecord = emp.timeRecord[emp.timeRecord.length - 1];
+
         if (
           !timeRecord ||
-          new Date(timeRecord.startTime).setHours(0, 0, 0, 0) !== today
+          new Date(
+            timeRecord.startTime.getTime() - LOCAL_GMT * 60 * 60 * 1000
+          ).setHours(0, 0, 0, 0) !== today
         ) {
           reject("You have to clock in first!");
         } else {
@@ -217,7 +217,9 @@ export function employeeClockOut(id) {
           )
             .then(() => {
               resolve(
-                `Clock out: ${new Date(endTime.getTime() - LOCAL_GMT * 60 * 60 * 1000).toLocaleTimeString()}.
+                `Clock out: ${new Date(
+                  endTime.getTime() - LOCAL_GMT * 60 * 60 * 1000
+                ).toLocaleTimeString()}.
                  Time: ${totalHours} hours and ${totalMinutes} minutes.`
               );
             })
