@@ -136,13 +136,16 @@ export function employeeClockIn(id) {
     Employee.findById(id)
       .exec()
       .then((emp) => {
-        const today = new Date().setHours(0, 0, 0, 0);
+        const today = new Date().toLocaleDateString();
+        const todayHours = new Date(today).setHours(0, 0, 0, 0);
         const lastRecord = emp.timeRecord[emp.timeRecord.length - 1];
-        if (
-          lastRecord &&
-          new Date(lastRecord.startTime).setHours(0, 0, 0, 0) === today
-        ) {
-          reject("You already clocked in today");
+        if (lastRecord) {
+          const lastRecordDate = new Date(
+            lastRecord.startTime
+          ).toLocaleDateString();
+          const lastRecordHours = new Date(lastRecordDate).setHours(0, 0, 0, 0);
+          if (lastRecordHours === todayHours)
+            reject("You already clocked in today");
         } else {
           let startTime = new Date().toLocaleString();
           let start = new Date().toLocaleString();
