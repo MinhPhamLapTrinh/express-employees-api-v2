@@ -136,49 +136,57 @@ export function employeeClockIn(id) {
     Employee.findById(id)
       .exec()
       .then((emp) => {
-        const today = new Date().toLocaleDateString();
-        const todayHours = new Date(today).setHours(0, 0, 0, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // Convert to UTC
+
         const lastRecord = emp.timeRecord[emp.timeRecord.length - 1];
         if (lastRecord) {
-          const lastRecordDate = new Date(
-            lastRecord.startTime
-          ).toLocaleDateString();
-          const lastRecordHours = new Date(lastRecordDate).setHours(0, 0, 0, 0);
-          if (lastRecordHours === todayHours) {
+          const lastRecordDate = new Date(lastRecord.startTime);
+          lastRecordDate.setHours(0, 0, 0, 0);
+          lastRecordDate.setMinutes(
+            lastRecordDate.getMinutes() - lastRecordDate.getTimezoneOffset()
+          ); // Convert to UTC
+
+          if (lastRecordDate.getTime() === today.getTime()) {
             reject("You already clocked in today");
-          }
-        } else {
-          let startTime = new Date().toLocaleString();
-          let start = new Date().toLocaleString();
-          let startHour = new Date().getHours();
-          let startMinutes = new Date().getMinutes();
-          if (
-            (startHour === MORNING_SHIFT_START && startMinutes > 5) ||
-            (startHour > MORNING_SHIFT_START && startHour < MORNING_SHIFT_END)
-          ) {
-            start = new Date(start).setMinutes(startMinutes + LATE_START_TIME);
-            startTime = new Date(start).toLocaleString();
-          } else if (
-            (startHour === EVENING_SHIFT_START && startMinutes > 5) ||
-            startHour > EVENING_SHIFT_START
-          ) {
-            start = new Date(start).setMinutes(startMinutes + LATE_START_TIME);
-            startTime = new Date(start).toLocaleString();
-          }
-          emp.timeRecord.push({
-            date: startTime,
-            startTime: startTime,
-            endTime: null,
-            totalWorkingHours: 0,
-          });
-          emp
-            .save()
-            .then(() => {
-              resolve(`${emp.employeeName} clocked in on ${startTime}`);
-            })
-            .catch((err) => {
-              reject(`Cannot clock in ` + err);
+          } else {
+            let startTime = new Date().toLocaleString();
+            let start = new Date().toLocaleString();
+            let startHour = new Date().getHours();
+            let startMinutes = new Date().getMinutes();
+            if (
+              (startHour === MORNING_SHIFT_START && startMinutes > 5) ||
+              (startHour > MORNING_SHIFT_START && startHour < MORNING_SHIFT_END)
+            ) {
+              start = new Date(start).setMinutes(
+                startMinutes + LATE_START_TIME
+              );
+              startTime = new Date(start).toLocaleString();
+            } else if (
+              (startHour === EVENING_SHIFT_START && startMinutes > 5) ||
+              startHour > EVENING_SHIFT_START
+            ) {
+              start = new Date(start).setMinutes(
+                startMinutes + LATE_START_TIME
+              );
+              startTime = new Date(start).toLocaleString();
+            }
+            emp.timeRecord.push({
+              date: startTime,
+              startTime: startTime,
+              endTime: null,
+              totalWorkingHours: 0,
             });
+            emp
+              .save()
+              .then(() => {
+                resolve(`${emp.employeeName} clocked in on ${startTime}`);
+              })
+              .catch((err) => {
+                reject(`Cannot clock in ` + err);
+              });
+          }
         }
       });
   });
