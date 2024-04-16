@@ -147,6 +147,7 @@ export function employeeClockIn(id) {
           lastRecordDate.setMinutes(
             lastRecordDate.getMinutes() - lastRecordDate.getTimezoneOffset()
           ); // Convert to UTC
+          console.log(lastRecordDate)
           if (lastRecordDate.getTime() === today.getTime()) {
             reject("You already clocked in today");
             return
