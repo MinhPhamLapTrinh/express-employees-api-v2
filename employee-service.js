@@ -137,12 +137,9 @@ export function employeeClockIn(id) {
       .exec()
       .then((emp) => {
         const now = new Date(); // Current time in local timezone
-        const today = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate()
-        ); // Start of today in local timezone
-        console.log("Now:", now)
+        const today = new Date(now.getTime() - 4 * 60 * 60 * 1000); // Start of today in local timezone
+        today.setHours(0, 0, 0, 0);
+        console.log("Now:", now);
         console.log("Today:", today);
 
         const lastRecord = emp.timeRecord[emp.timeRecord.length - 1];
@@ -151,16 +148,11 @@ export function employeeClockIn(id) {
         if (lastRecord) {
           const lastRecordDate = new Date(lastRecord.startTime);
           const lastRecordDateLocal = new Date(
-            lastRecordDate.getTime() -
-              lastRecordDate.getTimezoneOffset()
+            lastRecordDate.getTime() - 4 * 60 * 60 * 1000
           ); // Convert to local timezone
           console.log("Last Record Local:", lastRecordDateLocal);
 
-          if (
-            lastRecordDateLocal.getFullYear() === today.getFullYear() &&
-            lastRecordDateLocal.getMonth() === today.getMonth() &&
-            lastRecordDateLocal.getDate() === today.getDate()
-          ) {
+          if (lastRecordDateLocal.getTime() === today.getTime()) {
             reject(
               `You already clocked in today at ${lastRecordDateLocal.toLocaleString()}`
             );
@@ -168,9 +160,9 @@ export function employeeClockIn(id) {
           }
         }
 
-        const startTime = now.toISOString(); // Current time in ISO format
+        const startTime = now; // Current time in ISO format
         emp.timeRecord.push({
-          date: now.toLocaleDateString(),
+          date: startTime,
           startTime: startTime,
           endTime: null,
           totalWorkingHours: 0,
@@ -178,8 +170,9 @@ export function employeeClockIn(id) {
         emp
           .save()
           .then(() => {
-            const start = new Date(startTime).toLocaleString();
-            resolve(`${emp.employeeName} clocked in on ${start}`);
+            resolve(
+              `${emp.employeeName} clocked in on ${startTime.toLocaleString()}`
+            );
           })
           .catch((err) => {
             reject(`Cannot clock in ` + err);
