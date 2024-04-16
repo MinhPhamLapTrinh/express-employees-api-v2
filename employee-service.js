@@ -147,26 +147,25 @@ export function employeeClockIn(id) {
           lastRecordDate.setMinutes(
             lastRecordDate.getMinutes() - lastRecordDate.getTimezoneOffset()
           ); // Convert to UTC
-
           if (lastRecordDate.getTime() === today.getTime()) {
             reject("You already clocked in today");
-          } else {
-            let startTime = new Date().toLocaleString();
-            emp.timeRecord.push({
-              date: startTime,
-              startTime: startTime,
-              endTime: null,
-              totalWorkingHours: 0,
-            });
-            emp
-              .save()
-              .then(() => {
-                resolve(`${emp.employeeName} clocked in on ${startTime}`);
-              })
-              .catch((err) => {
-                reject(`Cannot clock in ` + err);
-              });
           }
+        } else {
+          let startTime = new Date().toLocaleString();
+          emp.timeRecord.push({
+            date: startTime,
+            startTime: startTime,
+            endTime: null,
+            totalWorkingHours: 0,
+          });
+          emp
+            .save()
+            .then(() => {
+              resolve(`${emp.employeeName} clocked in on ${startTime}`);
+            })
+            .catch((err) => {
+              reject(`Cannot clock in ` + err);
+            });
         }
       });
   });
@@ -184,11 +183,6 @@ export function employeeClockOut(id) {
           new Date(timeRecord.startTime).setHours(0, 0, 0, 0) !== today
         ) {
           reject("You have to clock in first!");
-        } else if (
-          timeRecord &&
-          new Date(timeRecord.endTime).setHours(0, 0, 0, 0) === today
-        ) {
-          reject("You already clocked out today");
         } else {
           const endTime = new Date();
           const start = new Date(timeRecord.startTime).getTime();
