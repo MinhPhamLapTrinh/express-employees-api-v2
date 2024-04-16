@@ -140,7 +140,7 @@ export function employeeClockIn(id) {
         const lastRecord = emp.timeRecord[emp.timeRecord.length - 1];
         if (
           lastRecord &&
-          new Date(lastRecord.date).setHours(0, 0, 0, 0) === today
+          new Date(lastRecord.startTime).setHours(0, 0, 0, 0) === today
         ) {
           reject("You already clocked in today");
         } else {
@@ -155,7 +155,7 @@ export function employeeClockIn(id) {
             start = new Date(start).setMinutes(startMinutes + LATE_START_TIME);
             startTime = new Date(start).toLocaleString();
           } else if (
-            (startHour === EVENING_SHIFT_START && startMinutes > 10) ||
+            (startHour === EVENING_SHIFT_START && startMinutes > 5) ||
             startHour > EVENING_SHIFT_START
           ) {
             start = new Date(start).setMinutes(startMinutes + LATE_START_TIME);
