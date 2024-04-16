@@ -151,6 +151,7 @@ export function employeeClockIn(id) {
           if (lastRecordDate.getTime() === today.getTime()) {
             reject("You already clocked in today");
           } else {
+            let startTime = new Date().toLocaleString();
             emp.timeRecord.push({
               date: startTime,
               startTime: startTime,
