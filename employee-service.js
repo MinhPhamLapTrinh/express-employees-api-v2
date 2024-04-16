@@ -3,12 +3,7 @@ import env from "dotenv";
 env.config();
 import bcrypt from "bcrypt";
 
-const MORNING_SHIFT_START = 11;
-const MORNING_SHIFT_END = 17;
-const EVENING_SHIFT_START = 17;
-const EVENING_SHIFT_END = 22;
-const LATE_START_TIME = 30;
-
+const LOCAL_GMT = 4
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
 let mongoDBConnectionString = process.env.MONGO_URI;
 
@@ -137,7 +132,7 @@ export function employeeClockIn(id) {
       .exec()
       .then((emp) => {
         const now = new Date(); // Current time in local timezone
-        const today = new Date(now.getTime() - 4 * 60 * 60 * 1000); // Start of today in local timezone
+        const today = new Date(now.getTime() - LOCAL_GMT * 60 * 60 * 1000); // Start of today in local timezone
         today.setHours(0, 0, 0, 0);
         console.log("Now:", now);
         console.log("Today:", today);
@@ -148,7 +143,7 @@ export function employeeClockIn(id) {
         if (lastRecord) {
           const lastRecordDate = new Date(lastRecord.startTime);
           const lastRecordDateLocal = new Date(
-            lastRecordDate.getTime() - 4 * 60 * 60 * 1000
+            lastRecordDate.getTime() - LOCAL_GMT * 60 * 60 * 1000
           ); // Convert to local timezone
           console.log("Last Record Local:", lastRecordDateLocal);
 
@@ -176,7 +171,7 @@ export function employeeClockIn(id) {
           .then(() => {
             resolve(
               `${emp.employeeName} clocked in on ${new Date(
-                startTime.getTime() - 4 * 60 * 60 * 1000
+                startTime.getTime() - LOCAL_GMT * 60 * 60 * 1000
               ).toLocaleString()}`
             );
           })
@@ -222,7 +217,7 @@ export function employeeClockOut(id) {
           )
             .then(() => {
               resolve(
-                `Clock out: ${new Date(endTime.getTime() - 4 * 60 * 60 * 1000).toLocaleTimeString()}.
+                `Clock out: ${new Date(endTime.getTime() - LOCAL_GMT * 60 * 60 * 1000).toLocaleTimeString()}.
                  Time: ${totalHours} hours and ${totalMinutes} minutes.`
               );
             })
