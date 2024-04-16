@@ -136,39 +136,41 @@ export function employeeClockIn(id) {
     Employee.findById(id)
       .exec()
       .then((emp) => {
-        const now = new Date();
+        const now = new Date(); // Current time in local timezone
         const today = new Date(
-          Date.UTC(
-            now.getUTCFullYear(),
-            now.getUTCMonth(),
-            now.getUTCDate(),
-            0,
-            0,
-            0
-          )
-        );
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        ); // Start of today in local timezone
+        console.log("Now:", now)
+        console.log("Today:", today);
+
         const lastRecord = emp.timeRecord[emp.timeRecord.length - 1];
+        // console.log("Last Record:", lastRecord);
+
         if (lastRecord) {
           const lastRecordDate = new Date(lastRecord.startTime);
-          const utcLastRecordDate = new Date(
-            Date.UTC(
-              lastRecordDate.getUTCFullYear(),
-              lastRecordDate.getUTCMonth(),
-              lastRecordDate.getUTCDate(),
-              0,
-              0,
-              0
-            )
-          );
+          const lastRecordDateLocal = new Date(
+            lastRecordDate.getTime() -
+              lastRecordDate.getTimezoneOffset()
+          ); // Convert to local timezone
+          console.log("Last Record Local:", lastRecordDateLocal);
 
-          if (utcLastRecordDate.getTime() === today.getTime()) {
-            reject("You already clocked in today " + utcLastRecordDate);
+          if (
+            lastRecordDateLocal.getFullYear() === today.getFullYear() &&
+            lastRecordDateLocal.getMonth() === today.getMonth() &&
+            lastRecordDateLocal.getDate() === today.getDate()
+          ) {
+            reject(
+              `You already clocked in today at ${lastRecordDateLocal.toLocaleString()}`
+            );
             return;
           }
         }
-        let startTime = new Date().toLocaleString();
+
+        const startTime = now.toISOString(); // Current time in ISO format
         emp.timeRecord.push({
-          date: startTime,
+          date: now.toLocaleDateString(),
           startTime: startTime,
           endTime: null,
           totalWorkingHours: 0,
