@@ -152,7 +152,11 @@ export function employeeClockIn(id) {
           ); // Convert to local timezone
           console.log("Last Record Local:", lastRecordDateLocal);
 
-          if (lastRecordDateLocal.getTime() === today.getTime()) {
+          if (
+            lastRecordDateLocal.getFullYear() === today.getFullYear() &&
+            lastRecordDateLocal.getMonth() === today.getMonth() &&
+            lastRecordDateLocal.getDate() === today.getDate()
+          ) {
             reject(
               `You already clocked in today at ${lastRecordDateLocal.toLocaleString()}`
             );
@@ -171,7 +175,9 @@ export function employeeClockIn(id) {
           .save()
           .then(() => {
             resolve(
-              `${emp.employeeName} clocked in on ${startTime.toLocaleString()}`
+              `${emp.employeeName} clocked in on ${new Date(
+                startTime.getTime() - 4 * 60 * 60 * 1000
+              ).toLocaleString()}`
             );
           })
           .catch((err) => {
