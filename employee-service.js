@@ -154,7 +154,7 @@ export function employeeClockIn(id) {
           }
         }
 
-        const startTime = now; // Current time in ISO format
+        const startTime = now;
         emp.timeRecord.push({
           date: startTime,
           startTime: startTime,
@@ -186,12 +186,10 @@ export function employeeClockOut(id) {
         const today = new Date(now.getTime() - LOCAL_GMT * 60 * 60 * 1000); // Start of today in local timezone
         today.setHours(0, 0, 0, 0);
         const timeRecord = emp.timeRecord[emp.timeRecord.length - 1];
-
+        const start = new Date(timeRecord.startTime)
         if (
           !timeRecord ||
-          new Date(
-            timeRecord.startTime.getTime() - LOCAL_GMT * 60 * 60 * 1000
-          ).setHours(0, 0, 0, 0) !== today
+          new Date(start.getTime() - LOCAL_GMT * 60 * 60 * 1000).setHours(0, 0, 0, 0) !== today
         ) {
           reject("You have to clock in first!");
         } else {
