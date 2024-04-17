@@ -185,12 +185,15 @@ export function employeeClockOut(id) {
         const now = new Date(); // Current time in local timezone
         const today = new Date(now.getTime() - LOCAL_GMT * 60 * 60 * 1000); // Start of today in local timezone
         today.setHours(0, 0, 0, 0);
+        console.log(today);
         const timeRecord = emp.timeRecord[emp.timeRecord.length - 1];
-        const start = new Date(timeRecord.startTime)
-        if (
-          !timeRecord ||
-          new Date(start.getTime() - LOCAL_GMT * 60 * 60 * 1000).setHours(0, 0, 0, 0) !== today
-        ) {
+        const start = new Date(timeRecord.startTime);
+        const clockInTime = new Date(
+          start.getTime() - LOCAL_GMT * 60 * 60 * 1000
+        );
+        clockInTime.setHours(0, 0, 0, 0);
+        console.log(clockInTime);
+        if (!timeRecord || (clockInTime.getTime() !== today.getTime())) {
           reject("You have to clock in first!");
         } else {
           const endTime = new Date();
