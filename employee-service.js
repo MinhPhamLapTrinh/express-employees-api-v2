@@ -235,10 +235,10 @@ export function employeeClockOut(id) {
 export function getAllEmployeeByDate(startDate, endDate) {
   return new Promise(function (resolve, reject) {
     const start = new Date(startDate);
-    start.setDate(start.getDate() - 1);
+    start.setDate(start.getDate());
     start.setHours(0, 0, 0, 0);
     const end = new Date(endDate);
-    end.setDate(end.getDate() - 1);
+    end.setDate(end.getDate());
     end.setHours(23, 59, 59, 999);
     Employee.find({})
       .then((employees) => {
