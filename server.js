@@ -127,7 +127,7 @@ app.get("/employee/:uniqueNum", async (req, res) => {
       res.json(emp);
     })
     .catch((err) => {
-      res.status(422).send({ message: err });
+      res.status(422).send({message: err});
     });
 });
 
