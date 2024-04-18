@@ -193,7 +193,7 @@ export function employeeClockOut(id) {
         );
         clockInTime.setHours(0, 0, 0, 0);
         console.log(clockInTime);
-        if (!timeRecord || (clockInTime.getTime() !== today.getTime())) {
+        if (!timeRecord || clockInTime.getTime() !== today.getTime()) {
           reject("You have to clock in first!");
         } else {
           const endTime = new Date();
@@ -234,12 +234,12 @@ export function employeeClockOut(id) {
 
 export function getAllEmployeeByDate(startDate, endDate) {
   return new Promise(function (resolve, reject) {
-    const start = new Date(startDate);
-    start.setDate(start.getDate());
+    const start = new Date(startDate - LOCAL_GMT * 60 * 60 * 1000);
     start.setHours(0, 0, 0, 0);
-    const end = new Date(endDate);
-    end.setDate(end.getDate());
+    console.log(start);
+    const end = new Date(endDate - LOCAL_GMT * 60 * 60 * 1000);
     end.setHours(23, 59, 59, 999);
+    console.log(end);
     Employee.find({})
       .then((employees) => {
         const biWeeklyWorkingHours = employees
@@ -247,7 +247,8 @@ export function getAllEmployeeByDate(startDate, endDate) {
             const totalHours = emp.timeRecord
               .filter(
                 (time) =>
-                  new Date(time.date) >= start && new Date(time.date) <= end
+                  new Date(time.date - LOCAL_GMT * 60 * 60 * 1000) >= start &&
+                  new Date(time.date - LOCAL_GMT * 60 * 60 * 1000) <= end
               )
               .map((filterDate) => filterDate.totalWorkingHours);
             return totalHours.length > 0
