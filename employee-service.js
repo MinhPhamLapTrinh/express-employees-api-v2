@@ -235,11 +235,11 @@ export function employeeClockOut(id) {
 export function getAllEmployeeByDate(startDate, endDate) {
   return new Promise(function (resolve, reject) {
     const start = new Date(startDate - LOCAL_GMT * 60 * 60 * 1000);
+    start.setDate(start.getDate() + 1)
     start.setHours(0, 0, 0, 0);
-    console.log(start);
     const end = new Date(endDate - LOCAL_GMT * 60 * 60 * 1000);
+    end.setDate(end.getDate() + 1)
     end.setHours(23, 59, 59, 999);
-    console.log(end);
     Employee.find({})
       .then((employees) => {
         const biWeeklyWorkingHours = employees
