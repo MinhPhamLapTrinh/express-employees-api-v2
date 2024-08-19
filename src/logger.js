@@ -1,5 +1,6 @@
 // src/logger.js
 
+// https://github.com/pinojs/pino-pretty
 import pino from "pino";
 
 const options = { level: process.env.LOG_LEVEL || "info" };
