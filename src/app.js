@@ -15,13 +15,6 @@ import compression from "compression";
 // https://www.npmjs.com/package/body-parser
 import bodyParser from "body-parser";
 
-// author and version from our package.json file
-// https://nodejs.org/dist/latest-v18.x/docs/api/esm.html#no-require-exports-or-moduleexports
-// ESLint hasn't supported assertion yet
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-const { author, version } = require("../package.json");
-
 // Get our Logger
 import logger from "./logger.js";
 
@@ -51,19 +44,8 @@ app.use(bodyParser.json());
 // Use CORS middleware so we can make requests across origins
 app.use(cors());
 
-// Define a simple health check route. If the server is running
-// We'll respond with a 200 OK. If not, the server isn't healthy.
-app.get("/", (req, res) => {
-  // Clients shouldn't cache this response (always request it fresh)
-  res.setHeader("Cache-Control", "no-cache");
-
-  // Send a 200 'ok' response with the info about our information
-  res.status(200).json({
-    status: "ok",
-    author,
-    version,
-  });
-});
+// Define our routes
+app.use("/", require("./routes"));
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {
