@@ -6,10 +6,17 @@
  */
 
 import express from "express";
+import passport from "../../auth.js";
 
+import retrieveListEmployees from "../../controllers/getEmpList.js";
 // Create a router on which to mount our API endpoints
 const router = express.Router();
 
 // Define our first route, which will be: GET /v1/employees
-router.get("/employees/empList", require("./getEmpList"));
+router.get(
+  "/employees/empList",
+  passport.authenticate("jwt", { session: false }),
+  retrieveListEmployees
+);
 
+export default router;

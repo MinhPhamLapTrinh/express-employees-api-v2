@@ -1,6 +1,6 @@
 // src/routes/api/getEmpList.js
 
-import logger from "../../logger";
+import logger from "../logger.js";
 
 const retrieveListEmployees = async (req, res) => {
   logger.info(`Processing GET employee list!!`);

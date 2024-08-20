@@ -18,6 +18,12 @@ import bodyParser from "body-parser";
 // Get our Logger
 import logger from "./logger.js";
 
+// Get our passport
+import passport from "./auth.js";
+
+// Get our routes
+import routes from "./routes/index.js";
+
 // https://github.com/pinojs/pino-pretty
 import pinoHttp from "pino-http";
 
@@ -44,8 +50,11 @@ app.use(bodyParser.json());
 // Use CORS middleware so we can make requests across origins
 app.use(cors());
 
+// Initialize passport middleware so we can authorize users
+app.use(passport.initialize());
+
 // Define our routes
-app.use("/", require("./routes"));
+app.use("/", routes);
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {

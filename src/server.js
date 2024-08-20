@@ -11,7 +11,7 @@ import logger from "./logger.js";
 import app from "./app.js";
 
 // Get the desired port from the process' environment. Default to `8080`
-const port = parseInt(process.env.PORT || "8080", 10);
+import port from "./config/index.js";
 
 // Start a server listening on this port
 const server = stoppable(

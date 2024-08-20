@@ -2,6 +2,9 @@
 
 import express from "express";
 
+// Get our API
+import apiRouter from "./api/index.js";
+
 // Create a router that we can use to mount our API
 const router = express.Router();
 
@@ -10,12 +13,12 @@ const router = express.Router();
 // ESLint hasn't supported assertion yet
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
-const { author, version } = require("../package.json");
+const { author, version } = require("../../package.json");
 
 /**
  * Expose all of our API routes on /v1/* to include an API version.
  */
-router.use(`/v1`, require("./api"));
+router.use(`/v1`, apiRouter);
 
 /**
  * Define a simple health check route. If the server is running
