@@ -1,7 +1,7 @@
-// src/controllers/getEmpListController.js
+// src/controllers/ownerController/getEmpListController.js
 
-import logger from "../logger.js";
-import Owner from "../model/owner.js";
+import logger from "../../logger.js";
+import Owner from "../../model/owner.js";
 
 const ownerModel = new Owner();
 

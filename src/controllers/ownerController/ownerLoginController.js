@@ -1,9 +1,9 @@
-// src/controllers/ownerLoginController.js
+// src/controllers/ownerController/ownerLoginController.js
 
-import logger from "../logger.js";
+import logger from "../../logger.js";
 import jwt from "jsonwebtoken";
-import { jwtOptions } from "../auth.js";
-import Owner from "../model/owner.js";
+import { jwtOptions } from "../../auth.js";
+import Owner from "../../model/owner.js";
 
 // Initialize owner model
 const ownerModel = new Owner();

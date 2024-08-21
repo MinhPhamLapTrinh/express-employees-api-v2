@@ -8,8 +8,8 @@
 import express from "express";
 import passport from "../../auth.js";
 
-import retrieveListEmployees from "../../controllers/getEmpListController.js";
-import verifyOwner from "../../controllers/ownerLoginController.js";
+import retrieveListEmployees from "../../controllers/ownerController/getEmpListController.js";
+import verifyOwner from "../../controllers/ownerController/ownerLoginController.js";
 // Create a router on which to mount our API endpoints
 const router = express.Router();
 
@@ -25,7 +25,5 @@ router.get(
 
 // Sign in route for only owners. EMPLOYEE NOT ALLOWED
 router.post("/employees/ownerLogin", verifyOwner);
-
-
 
 export default router;
