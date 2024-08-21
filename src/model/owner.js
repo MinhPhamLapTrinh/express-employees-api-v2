@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 
 // Get our environment variables.
 import env from "dotenv";
+
 env.config();
 
 // Cost factor controls how much time is needed for Bcrypt hash

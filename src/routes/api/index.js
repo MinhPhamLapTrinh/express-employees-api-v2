@@ -10,7 +10,8 @@ import passport from "../../auth.js";
 
 import retrieveListEmployees from "../../controllers/ownerController/getEmpListController.js";
 import verifyOwner from "../../controllers/ownerController/ownerLoginController.js";
-import getPersonalDetail from "../../controllers/employeeController/getDetailInfo.js";
+import getPersonalDetail from "../../controllers/employeeController/getDetailInfoController.js";
+import addNewEmployee from "../../controllers/ownerController/addEmployeeController.js";
 // Create a router on which to mount our API endpoints
 const router = express.Router();
 
@@ -19,14 +20,21 @@ const router = express.Router();
  * Authorized owner will be able to retrieve a list of employees
  */
 router.get(
-  "/employees/empList",
+  "/sglotus/empList",
   passport.authenticate("jwt", { session: false }),
   retrieveListEmployees
 );
 
 // Sign in route for only owners. EMPLOYEE NOT ALLOWED
-router.post("/employees/ownerLogin", verifyOwner);
+router.post("/sglotus/ownerLogin", verifyOwner);
+
+// Add employee route for only owners.
+router.post(
+  "/sglotus/newEmployee",
+  passport.authenticate("jwt", { session: false }),
+  addNewEmployee
+);
 
 // A route for employees to check their time working records
-router.get("/employees/personalDetail/:uniqueNum", getPersonalDetail);
+router.get("/sglotus/personalDetail/:uniqueNum", getPersonalDetail);
 export default router;
