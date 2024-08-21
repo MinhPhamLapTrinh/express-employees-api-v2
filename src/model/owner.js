@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 // Get our environment variables.
 import env from "dotenv";
 env.config();
+
 // Cost factor controls how much time is needed for Bcrypt hash
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
@@ -31,18 +32,16 @@ class Owner {
         .exec()
         .then((owner) => {
           // Hash the given password and compare with the existing one in the database
-          bcrypt
-            .compare(ownerData.password, owner.password)
-            .then((res) => {
-              if (res === true) {
-                resolve(owner);
-              } else {
-                reject("Incorrect password for user " + ownerData.username);
-              }
-            })
-            .catch(() => {
-              reject("Unable to find user " + ownerData.username);
-            });
+          bcrypt.compare(ownerData.password, owner.password).then((res) => {
+            if (res === true) {
+              resolve(owner);
+            } else {
+              reject("Incorrect password for " + ownerData.username);
+            }
+          });
+        })
+        .catch(() => {
+          reject("Unable to find " + ownerData.username);
         });
     });
   }

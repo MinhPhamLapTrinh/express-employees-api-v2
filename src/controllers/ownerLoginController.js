@@ -23,7 +23,11 @@ const verifyOwner = async (req, res) => {
       // Create token and pass it to client side
       let token = jwt.sign(payload, jwtOptions.secretOrKey);
 
-      res.status(201).json({ message: owner, token: token });
+      res.status(201).json({
+        status: "ok",
+        message: owner,
+        token: token,
+      });
     })
     .catch((err) => {
       logger.error({ err });

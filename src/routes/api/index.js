@@ -26,4 +26,6 @@ router.get(
 // Sign in route for only owners. EMPLOYEE NOT ALLOWED
 router.post("/employees/ownerLogin", verifyOwner);
 
+
+
 export default router;
