@@ -32,4 +32,5 @@ let strategy = new JwtStrategy(jwtOptions, function (payload, next) {
 // tell passport to use our "strategy"
 passport.use(strategy);
 
+export { jwtOptions };
 export default passport;
