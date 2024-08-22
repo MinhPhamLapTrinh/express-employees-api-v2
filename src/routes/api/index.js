@@ -13,6 +13,7 @@ import verifyOwner from "../../controllers/ownerController/ownerLoginController.
 import getPersonalDetail from "../../controllers/employeeController/getDetailInfoController.js";
 import addNewEmployee from "../../controllers/ownerController/addEmployeeController.js";
 import deleteEmployee from "../../controllers/ownerController/deleteEmployeeController.js";
+import retrieveEmployeeHours from "../../controllers/ownerController/retrieveEmployeeHoursController.js";
 // Create a router on which to mount our API endpoints
 const router = express.Router();
 
@@ -41,6 +42,13 @@ router.delete(
   "/sglotus/delete/:id",
   passport.authenticate("jwt", { session: false }),
   deleteEmployee
+);
+
+// Retrieve a list of employees based on the given range date.
+router.get(
+  "/sglotus/employeeHours",
+  passport.authenticate("jwt", { session: false }),
+  retrieveEmployeeHours
 );
 
 // A route for employees to check their time working records
