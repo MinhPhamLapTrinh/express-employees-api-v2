@@ -1,6 +1,7 @@
 // src/models/employee.js
 import { EmployeeModel } from "../database.js";
 import bcrypt from "bcrypt";
+import logger from "../logger.js";
 const LOCAL_GMT = 4;
 
 class Employee {
@@ -60,7 +61,7 @@ class Employee {
               latestRecordDateLocal.getDate() === today.getDate()
             ) {
               reject(
-                `You already clocked in today at ${latestRecordDateLocal.toLocaleString()}`
+                `You ALREADY clocked in today at ${latestRecordDateLocal.toLocaleString()}`
               );
               return;
             }
@@ -108,6 +109,15 @@ class Employee {
           today.setHours(0, 0, 0, 0);
 
           const timeRecord = emp.timeRecord[emp.timeRecord.length - 1];
+
+          logger.debug({ timeRecord }, "Time Record: ");
+
+          // New employee who has no record yet trying to clock-out
+          if (!timeRecord) {
+            reject("Please, Clock-in for your first day of work!");
+            return;
+          }
+
           const start = new Date(timeRecord.startTime);
 
           const clockInTime = new Date(
@@ -116,7 +126,7 @@ class Employee {
           clockInTime.setHours(0, 0, 0, 0);
 
           // Employees are not allowed to clock-out unless they've clocked in for today
-          if (!timeRecord || clockInTime.getTime() !== today.getTime()) {
+          if (clockInTime.getTime() !== today.getTime()) {
             reject("You have to clock in first!");
           } else {
             const endTime = new Date();
