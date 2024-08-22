@@ -28,7 +28,7 @@ const employeeClockIn = async (req, res) => {
     }
   } catch (err) {
     logger.error({ err });
-    res.status(500).send({ message: err });
+    res.status(500).send({ message: err.message });
   }
 };
 
