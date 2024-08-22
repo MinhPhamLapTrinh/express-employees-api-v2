@@ -14,6 +14,7 @@ import getPersonalDetail from "../../controllers/employeeController/getDetailInf
 import addNewEmployee from "../../controllers/ownerController/addEmployeeController.js";
 import deleteEmployee from "../../controllers/ownerController/deleteEmployeeController.js";
 import retrieveEmployeeHours from "../../controllers/ownerController/retrieveEmployeeHoursController.js";
+import updateEmpHours from "../../controllers/ownerController/updateEmpHoursController.js";
 // Create a router on which to mount our API endpoints
 const router = express.Router();
 
@@ -49,6 +50,13 @@ router.get(
   "/sglotus/employeeHours",
   passport.authenticate("jwt", { session: false }),
   retrieveEmployeeHours
+);
+
+// Update the start date or end date of the particular employee
+router.put(
+  "/sglotus/updateEmployeeHours",
+  passport.authenticate("jwt", { session: false }),
+  updateEmpHours
 );
 
 // A route for employees to check their time working records
