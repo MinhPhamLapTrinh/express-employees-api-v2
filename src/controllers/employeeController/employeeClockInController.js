@@ -8,7 +8,7 @@ const employeeModel = new Employee();
 // Handle the process of clocking-in for employees
 const employeeClockIn = async (req, res) => {
   // Employee's unique number
-  const uniqueNum = req.body.uniqueNum;
+  const uniqueNum = req.params.uniqueNum;
   try {
     // Verify an employee
     const result = await employeeModel.verifyEmployee(uniqueNum);
@@ -18,7 +18,7 @@ const employeeClockIn = async (req, res) => {
     // Authorized Employee will be able to clock-in
     try {
       const msg = await employeeModel.employeeClockIn(empID);
-      res.status(201).json({
+      res.status(200).json({
         status: "ok",
         message: msg,
       });

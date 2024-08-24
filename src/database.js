@@ -30,7 +30,15 @@ let ownerSchema = new Schema({
 let OwnerModel;
 let EmployeeModel;
 
+// Check if we are in a test environment
+const isTestEnv = process.env.NODE_ENV === "test";
+
 export function connect() {
+  if (isTestEnv) {
+    // If in test environment, use the global MongoDB URI provided by jest-mongodb
+    mongoDBConnectionString = global.__MONGO_URI__;
+  }
+
   return new Promise(function (resolve, reject) {
     let db = mongoose.createConnection(mongoDBConnectionString);
 

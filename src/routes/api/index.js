@@ -65,15 +65,15 @@ router.put(
 router.get("/sglotus/personalDetail/:uniqueNum", getPersonalDetail);
 
 // A route for employees to clock-in with the system
-router.post(
-  "/sglotus/clockIn",
+router.get(
+  "/sglotus/clockIn/:uniqueNum",
   passport.authenticate("jwt", { session: false }),
   employeeClockIn
 );
 
 // A route for employees to clock-out with the system
-router.post(
-  "/sglotus/clockOut",
+router.get(
+  "/sglotus/clockOut/:uniqueNum",
   passport.authenticate("jwt", { session: false }),
   employeeClockOut
 );
