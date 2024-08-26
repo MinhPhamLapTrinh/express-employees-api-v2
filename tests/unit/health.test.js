@@ -7,9 +7,8 @@ import app from "../../src/app.js";
 // author and version from our package.json file
 // https://nodejs.org/dist/latest-v18.x/docs/api/esm.html#no-require-exports-or-moduleexports
 // ESLint hasn't supported assertion yet
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-const { author, version } = require("../../package.json");
+const author = "Duc Minh, Pham";
+const version = "0.0.1";
 
 describe("/ health check", () => {
   test("should return HTTP 200 response", async () => {
