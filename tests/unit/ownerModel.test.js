@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 
 // Import the connect function to initialize the DB
-import { connect, OwnerModel } from "../../src/database.js";
+import { connect, OwnerModel, EmployeeModel } from "../../src/database.js";
 
 describe("Owner Model", () => {
   let ownerModel;
@@ -19,6 +19,7 @@ describe("Owner Model", () => {
 
   afterEach(async () => {
     // Clean up the database after each test
+    await EmployeeModel.deleteMany({});
     await OwnerModel.deleteMany({});
   });
 
@@ -75,5 +76,87 @@ describe("Owner Model", () => {
         password: "1222",
       })
     ).rejects.toEqual("Unable to find John Doe");
+  });
+
+  test("should add a new employee", async () => {
+    const name = "Alice";
+    const uniqueNum = "123456";
+    const result = await ownerModel.addEmployee(name, uniqueNum);
+    expect(result).toBe("Employee Alice successfully added");
+  });
+
+  test("should retrieve a list of existing employees", async () => {
+    const employees = [
+      { employeeName: "Alice", uniqueNum: "123456" },
+      { employeeName: "Bob", uniqueNum: "789012" },
+    ];
+
+    // Wait for all the addEmployee operations complete before proceeding. It is the promise concurrency methods.
+    await Promise.all(
+      employees.map((employee) =>
+        ownerModel.addEmployee(employee.employeeName, employee.uniqueNum)
+      )
+    );
+
+    const result = await ownerModel.getAllEmployee();
+    expect(result).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          employeeName: "Alice",
+          uniqueNum: expect.any(String),
+        }),
+        expect.objectContaining({
+          employeeName: "Bob",
+          uniqueNum: expect.any(String),
+        }),
+      ])
+    );
+  });
+
+  test("should retrieve a list of existing employees within the range date", async () => {
+    const startDate = new Date("2024-01-01");
+    const endDate = new Date("2024-01-31");
+    const result = await ownerModel.getAllEmployeeByDate(startDate, endDate);
+    expect(result).toEqual([]);
+  });
+
+  test("should update employee's working hours", async () => {
+    const uniqueNum = "0009";
+    const hashedUniqueNum = await bcrypt.hash(uniqueNum, 10);
+    const mockEmployee = new EmployeeModel({
+      employeeName: "John Smith",
+      uniqueNum: hashedUniqueNum,
+      timeRecord: [
+        {
+          date: new Date(),
+          startTime: new Date(),
+          endTime: new Date(),
+          totalWorkingHours: 0,
+        },
+      ],
+    });
+
+    const newEmp = await mockEmployee.save();
+    const empID = newEmp._id;
+
+    const time = new Date();
+    const field = "startTime";
+    const recordID = newEmp.timeRecord[0]["_id"];
+    const totalHours = 8;
+
+    const result = await ownerModel.updateEmployeeTime(
+      empID,
+      time,
+      field,
+      recordID,
+      totalHours
+    );
+    expect(result).toEqual(expect.any(Array));
+  });
+
+  test("should remove an employee", async () => {
+    const employee = await ownerModel.addEmployee("Alice", "123456");
+    const result = await ownerModel.removeEmployee(employee._id);
+    expect(result).toEqual(expect.any(Object));
   });
 });
