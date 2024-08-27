@@ -26,7 +26,7 @@ const router = express.Router();
  */
 router.get(
   "/sglotus/empList",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "basic"], { session: false }),
   retrieveListEmployees
 );
 
@@ -36,28 +36,28 @@ router.post("/sglotus/ownerLogin", verifyOwner);
 // Add employee route for only owners.
 router.post(
   "/sglotus/newEmployee",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "basic"], { session: false }),
   addNewEmployee
 );
 
 // Remove an employee route for only owners.
 router.delete(
   "/sglotus/delete/:id",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "basic"], { session: false }),
   deleteEmployee
 );
 
 // Retrieve a list of employees based on the given range date.
 router.get(
   "/sglotus/employeeHours",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "basic"], { session: false }),
   retrieveEmployeeHours
 );
 
 // Update the start date or end date of the particular employee
 router.put(
   "/sglotus/updateEmployeeHours/:id",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "basic"], { session: false }),
   updateEmpHours
 );
 
@@ -67,14 +67,14 @@ router.get("/sglotus/personalDetail/:uniqueNum", getPersonalDetail);
 // A route for employees to clock-in with the system
 router.get(
   "/sglotus/clockIn/:uniqueNum",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "basic"], { session: false }),
   employeeClockIn
 );
 
 // A route for employees to clock-out with the system
 router.get(
   "/sglotus/clockOut/:uniqueNum",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "basic"], { session: false }),
   employeeClockOut
 );
 

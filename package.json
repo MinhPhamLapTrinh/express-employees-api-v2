@@ -26,6 +26,7 @@
     "mongoose": "^8.2.2",
     "nodemon": "^3.1.0",
     "passport": "^0.7.0",
+    "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.1",
     "pino": "^9.3.2",
     "pino-http": "^10.2.0",
