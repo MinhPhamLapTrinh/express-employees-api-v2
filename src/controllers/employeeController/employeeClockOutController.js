@@ -18,7 +18,7 @@ const employeeClockOut = async (req, res) => {
     // Authorized Employee will be able to clock-out
     try {
       const msg = await employeeModel.employeeClockOut(empID);
-      res.status(200).json({
+      res.status(201).json({
         status: "ok",
         message: msg,
       });
