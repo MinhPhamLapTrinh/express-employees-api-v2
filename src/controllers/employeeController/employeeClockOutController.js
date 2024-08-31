@@ -8,7 +8,7 @@ const employeeModel = new Employee();
 // Handle the process of clocking-out for an employee.
 const employeeClockOut = async (req, res) => {
   // Employee's unique number
-  const uniqueNum = req.params.uniqueNum;
+  const uniqueNum = req.body.uniqueNum;
   try {
     // Verify an employee
     const result = await employeeModel.verifyEmployee(uniqueNum);

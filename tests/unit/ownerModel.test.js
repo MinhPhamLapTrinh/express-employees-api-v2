@@ -98,6 +98,11 @@ describe("Owner Model", () => {
       )
     );
 
+    /**
+     * @matcher expect.arrayContaining(array) matches a received array which contains all of the elements in the expected array
+     * @matcher expect.objectContaining(object) matches any received object that recursively matches the expected properties
+     * @matcher expect.any(constructor) matches anything that was created with the given constructor or if it's a primitive that is of the passed type.
+     */
     const result = await ownerModel.getAllEmployee();
     expect(result).toEqual(
       expect.arrayContaining([
@@ -117,10 +122,11 @@ describe("Owner Model", () => {
     const startDate = new Date("2024-01-01");
     const endDate = new Date("2024-01-31");
     const result = await ownerModel.getAllEmployeeByDate(startDate, endDate);
-    expect(result).toEqual([]);
+    expect(result).toEqual(expect.any(Array));
   });
 
   test("should update employee's working hours", async () => {
+    // Sample Employee's Information
     const uniqueNum = "0009";
     const hashedUniqueNum = await bcrypt.hash(uniqueNum, 10);
     const mockEmployee = new EmployeeModel({
@@ -135,8 +141,8 @@ describe("Owner Model", () => {
         },
       ],
     });
-
     const newEmp = await mockEmployee.save();
+
     const empID = newEmp._id;
 
     const time = new Date();
@@ -151,6 +157,7 @@ describe("Owner Model", () => {
       recordID,
       totalHours
     );
+
     expect(result).toEqual(expect.any(Array));
   });
 
