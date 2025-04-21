@@ -2,7 +2,6 @@
 import { EmployeeModel } from "../database.js";
 import bcrypt from "bcrypt";
 import logger from "../logger.js";
-const LOCAL_GMT = 4;
 
 class Employee {
   constructor() {
@@ -42,8 +41,9 @@ class Employee {
           const now = new Date();
 
           // Start of today in local timezone (GMT-4)
-          const today = new Date(now.getTime() - LOCAL_GMT * 60 * 60 * 1000);
+          const today = new Date(now.getTime());
           today.setHours(0, 0, 0, 0);
+          logger.debug({ today }, "Today Time: ");
 
           const latestRecord = emp.timeRecord[emp.timeRecord.length - 1];
 
@@ -51,8 +51,10 @@ class Employee {
           if (latestRecord) {
             const latestRecordDate = new Date(latestRecord.startTime);
             // Convert to local timezone
-            const latestRecordDateLocal = new Date(
-              latestRecordDate.getTime() - LOCAL_GMT * 60 * 60 * 1000
+            const latestRecordDateLocal = new Date(latestRecordDate.getTime());
+            logger.debug(
+              { latestRecordDateLocal },
+              "Latest Record for Today: "
             );
             // Compare the latest time record to today
             if (
@@ -60,9 +62,7 @@ class Employee {
               latestRecordDateLocal.getMonth() === today.getMonth() &&
               latestRecordDateLocal.getDate() === today.getDate()
             ) {
-              reject(
-                `You ALREADY clocked in today at ${latestRecordDateLocal.toLocaleString()}`
-              );
+              reject(`You ALREADY clocked in today!!!`);
               return;
             }
           }
@@ -79,9 +79,7 @@ class Employee {
             .save()
             .then(() => {
               resolve(
-                `${emp.employeeName} clocked in on ${new Date(
-                  startTime.getTime() - LOCAL_GMT * 60 * 60 * 1000
-                ).toLocaleString()}`
+                `${emp.employeeName} successfully clocked in at: ${startTime}`
               );
             })
             .catch((err) => {
@@ -105,12 +103,10 @@ class Employee {
           const now = new Date();
 
           // Start of today in local timezone
-          const today = new Date(now.getTime() - LOCAL_GMT * 60 * 60 * 1000);
+          const today = new Date(now.getTime());
           today.setHours(0, 0, 0, 0);
 
           const timeRecord = emp.timeRecord[emp.timeRecord.length - 1];
-
-          logger.debug({ timeRecord }, "Time Record: ");
 
           // New employee who has no record yet trying to clock-out
           if (!timeRecord) {
@@ -120,10 +116,15 @@ class Employee {
 
           const start = new Date(timeRecord.startTime);
 
-          const clockInTime = new Date(
-            start.getTime() - LOCAL_GMT * 60 * 60 * 1000
-          );
+          const clockInTime = new Date(start.getTime());
           clockInTime.setHours(0, 0, 0, 0);
+          logger.debug({ clockInTime }, "Latest Clock In time: ");
+          logger.debug({ today }, "Time for today: ");
+          const clockTime = clockInTime.getTime();
+          const todayTime = today.getTime();
+
+          logger.debug({ clockTime }, "Latest Clock In time: ");
+          logger.debug({ todayTime }, "Time for today: ");
 
           // Employees are not allowed to clock-out unless they've clocked in for today
           if (clockInTime.getTime() !== today.getTime()) {
@@ -154,7 +155,7 @@ class Employee {
               .then(() => {
                 resolve(
                   `Clock out: ${new Date(
-                    endTime.getTime() - LOCAL_GMT * 60 * 60 * 1000
+                    endTime.getTime()
                   ).toLocaleTimeString()}.
                    Time: ${totalHours} hours and ${totalMinutes} minutes.`
                 );
