@@ -78,9 +78,7 @@ class Employee {
           emp
             .save()
             .then(() => {
-              resolve(
-                `${emp.employeeName} successfully clocked in at: ${startTime}`
-              );
+              resolve(emp.timeRecord[emp.timeRecord.length - 1].startTime);
             })
             .catch((err) => {
               reject(`Cannot clock in ` + err);
@@ -153,12 +151,11 @@ class Employee {
               }
             )
               .then(() => {
-                resolve(
-                  `Clock out: ${new Date(
-                    endTime.getTime()
-                  ).toLocaleTimeString()}.
-                   Time: ${totalHours} hours and ${totalMinutes} minutes.`
-                );
+                resolve({
+                  endTime: endTime,
+                  totalHours: totalHours,
+                  totalMinutes: totalMinutes,
+                });
               })
               .catch((err) => {
                 reject(`Cannot clock out due to ${err}`);

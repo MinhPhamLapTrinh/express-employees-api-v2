@@ -17,10 +17,10 @@ const employeeClockIn = async (req, res) => {
 
     // Authorized Employee will be able to clock-in
     try {
-      const msg = await employeeModel.employeeClockIn(empID);
+      const clockInTime = await employeeModel.employeeClockIn(empID);
       res.status(201).json({
         status: "ok",
-        message: msg,
+        startTime: clockInTime,        
       });
     } catch (err) {
       logger.error({ err });
