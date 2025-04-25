@@ -23,7 +23,7 @@ class Employee {
       }
       throw new Error("Invalid PIN");
     } catch (err) {
-      throw new Error("Unable to find you in the system " + err);
+      throw new Error("Unable to find you in the system: " + err);
     }
   }
 
