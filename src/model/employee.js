@@ -108,7 +108,7 @@ class Employee {
           );
 
           // Current time in local timezone
-          const now = new Date("2025-04-29T03:00:01.880Z");
+          const now = new Date();
           logger.debug({ now }, "Time now: ");
 
           // Start of today in local timezone
