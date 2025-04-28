@@ -9,11 +9,13 @@ import bcrypt from "bcrypt";
 // Get our environment variables.
 import env from "dotenv";
 import logger from "../logger.js";
+import getTorontoUTCOffset from "../getTimeDiff.js";
 
 env.config();
 
 // Cost factor controls how much time is needed for Bcrypt hash
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
+const timeDiff = getTorontoUTCOffset();
 
 class Owner {
   constructor() {
@@ -105,17 +107,17 @@ class Owner {
   getAllEmployeeByDate(startDate, endDate) {
     return new Promise(function (resolve, reject) {
       // Convert the start date to the local timezone (Toronto)
-      const start = new Date(startDate);
+      const start = new Date(startDate + timeDiff * 60 * 60 * 1000);
       start.setDate(start.getDate() + 1);
       start.setHours(0, 0, 0, 0);
 
       // Convert the end date to the local timezone (Toronto)
-      const end = new Date(endDate);
+      const end = new Date(endDate + timeDiff * 60 * 60 * 1000);
       end.setDate(end.getDate() + 1);
       end.setHours(23, 59, 59, 999);
 
-      logger.debug({start}, "Recored Start Date: ")
-      logger.debug({end}, "Recored End Date: ")
+      logger.debug({ start }, "Recored Start Date: ");
+      logger.debug({ end }, "Recored End Date: ");
 
       EmployeeModel.find({})
         .then((employees) => {
@@ -125,9 +127,8 @@ class Owner {
               const totalHours = emp.timeRecord
                 .filter(
                   (time) =>
-                    new Date(time.date) >= start &&
-                    new Date(time.date) <= end
-                )              
+                    new Date(time.date + timeDiff * 60 * 60 * 1000) >= start && new Date(time.date + timeDiff * 60 * 60 * 1000) <= end
+                )
                 .map((filterDate) => filterDate.totalWorkingHours);
               return totalHours.length > 0
                 ? {

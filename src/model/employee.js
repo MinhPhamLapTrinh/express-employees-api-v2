@@ -2,6 +2,9 @@
 import { EmployeeModel } from "../database.js";
 import bcrypt from "bcrypt";
 import logger from "../logger.js";
+import getTorontoUTCOffset from "../getTimeDiff.js";
+
+const timeDiff = getTorontoUTCOffset();
 
 class Employee {
   constructor() {
@@ -41,7 +44,7 @@ class Employee {
           const now = new Date();
 
           // Start of today in local timezone (GMT-4)
-          const today = new Date(now.getTime());
+          const today = new Date(now.getTime() + timeDiff * 60 * 60 * 1000);
           today.setHours(0, 0, 0, 0);
           logger.debug({ today }, "Today Time: ");
 
@@ -51,7 +54,9 @@ class Employee {
           if (latestRecord) {
             const latestRecordDate = new Date(latestRecord.startTime);
             // Convert to local timezone
-            const latestRecordDateLocal = new Date(latestRecordDate.getTime());
+            const latestRecordDateLocal = new Date(
+              latestRecordDate.getTime() + timeDiff * 60 * 60 * 1000
+            );
             logger.debug(
               { latestRecordDateLocal },
               "Latest Record for Today: "
@@ -97,12 +102,17 @@ class Employee {
       EmployeeModel.findById(id)
         .exec()
         .then((emp) => {
+          logger.debug(
+            { timeDiff },
+            "Difference between Toronto and UTC time: "
+          );
+
           // Current time in local timezone
-          const now = new Date("2025-04-29T02:43:09.150Z");
+          const now = new Date("2025-04-29T03:00:01.880Z");
           logger.debug({ now }, "Time now: ");
 
           // Start of today in local timezone
-          const today = new Date(now.getTime());
+          const today = new Date(now.getTime() + timeDiff * 60 * 60 * 1000);
           today.setHours(0, 0, 0, 0);
 
           const timeRecord = emp.timeRecord[emp.timeRecord.length - 1];
@@ -115,7 +125,9 @@ class Employee {
 
           const start = new Date(timeRecord.startTime);
 
-          const clockInTime = new Date(start.getTime());
+          const clockInTime = new Date(
+            start.getTime() + timeDiff * 60 * 60 * 1000
+          );
           clockInTime.setHours(0, 0, 0, 0);
           logger.debug({ clockInTime }, "Latest Clock In time: ");
           logger.debug({ today }, "Time for today: ");
