@@ -98,7 +98,8 @@ class Employee {
         .exec()
         .then((emp) => {
           // Current time in local timezone
-          const now = new Date();
+          const now = new Date("2025-04-29T02:43:09.150Z");
+          logger.debug({ now }, "Time now: ");
 
           // Start of today in local timezone
           const today = new Date(now.getTime());
@@ -128,7 +129,7 @@ class Employee {
           if (clockInTime.getTime() !== today.getTime()) {
             reject("You have to clock in first!");
           } else {
-            const endTime = new Date();
+            const endTime = now;
             const start = new Date(timeRecord.startTime).getTime();
             const end = endTime.getTime();
             const totalWorkingHours = (end - start) / (1000 * 60 * 60);
