@@ -106,13 +106,13 @@ class Owner {
    */
   getAllEmployeeByDate(startDate, endDate) {
     return new Promise(function (resolve, reject) {
-      // Convert the start date to the local timezone (Toronto)
-      const start = new Date(startDate + timeDiff * 60 * 60 * 1000);
+      // Convert the start date to the local timezone (Toronto)      
+      const start = new Date(startDate);
       start.setDate(start.getDate() + 1);
       start.setHours(0, 0, 0, 0);
 
       // Convert the end date to the local timezone (Toronto)
-      const end = new Date(endDate + timeDiff * 60 * 60 * 1000);
+      const end = new Date(endDate);
       end.setDate(end.getDate() + 1);
       end.setHours(23, 59, 59, 999);
 
@@ -127,7 +127,8 @@ class Owner {
               const totalHours = emp.timeRecord
                 .filter(
                   (time) =>
-                    new Date(time.date + timeDiff * 60 * 60 * 1000) >= start && new Date(time.date + timeDiff * 60 * 60 * 1000) <= end
+                    new Date(time.date) >= start &&
+                    new Date(time.date) <= end
                 )
                 .map((filterDate) => filterDate.totalWorkingHours);
               return totalHours.length > 0
