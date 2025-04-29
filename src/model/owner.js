@@ -9,13 +9,11 @@ import bcrypt from "bcrypt";
 // Get our environment variables.
 import env from "dotenv";
 import logger from "../logger.js";
-import getTorontoUTCOffset from "../getTimeDiff.js";
 
 env.config();
 
 // Cost factor controls how much time is needed for Bcrypt hash
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
-const timeDiff = getTorontoUTCOffset();
 
 class Owner {
   constructor() {
