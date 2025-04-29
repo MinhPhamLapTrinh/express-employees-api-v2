@@ -105,13 +105,11 @@ class Owner {
   getAllEmployeeByDate(startDate, endDate) {
     return new Promise(function (resolve, reject) {
       // Convert the start date to the local timezone (Toronto)      
-      const start = new Date(startDate);
-      start.setDate(start.getDate() + 1);
+      const start = new Date(startDate);      
       start.setHours(0, 0, 0, 0);
 
       // Convert the end date to the local timezone (Toronto)
       const end = new Date(endDate);
-      end.setDate(end.getDate() + 1);
       end.setHours(23, 59, 59, 999);
 
       logger.debug({ start }, "Recored Start Date: ");
